@@ -1,9 +1,9 @@
 import 'package:atko_user_app/screen/cours/cours_pages.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart'; // Import intl package
+import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 class CoursPage extends StatefulWidget {
   @override
@@ -11,66 +11,38 @@ class CoursPage extends StatefulWidget {
 }
 
 class _CoursPageState extends State<CoursPage> {
-  final Dio _dio = Dio();
-  final storage = GetStorage();
-  List<dynamic> courses = [];
+  List<Map<String, dynamic>> testData = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchPaymart();
+    fetchData();
   }
 
-  Future<void> fetchPaymart() async {
-    setState(() {
-      isLoading = true;
-    });
+  Future<void> fetchData() async {
+    final box = GetStorage();
+    final token = box.read('token');
+
     try {
-      final response = await _dio.get(
+      var response = await Dio().get(
         'https://atko.tech/test_atko_crm/public/api/courss',
         options: Options(
-          headers: {
-            'Authorization': 'Bearer ${storage.read('token')}',
-          },
+          headers: {'Authorization': 'Bearer $token'},
         ),
       );
 
-      if (response.statusCode == 200 && response.data['status'] == true) {
+      if (response.statusCode == 200) {
         setState(() {
-          courses = response.data['cours'];
+          testData = List<Map<String, dynamic>>.from(response.data['cours']);
+          isLoading = false;
         });
-      } else {
-        Get.snackbar(
-          'Xatolik',
-          response.data['message'] ?? 'Maʼlumotlarni olishda xatolik yuz berdi',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
       }
     } catch (e) {
-      Get.snackbar(
-        'Xatolik',
-        "Tarmoqda xatolik yuz berdi.",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    } finally {
+      print('Xatolik: $e');
       setState(() {
         isLoading = false;
       });
-    }
-  }
-
-  String formatDate(String dateStr) {
-    try {
-      // Parse the incoming date string into a DateTime object
-      DateTime date = DateTime.parse(dateStr);
-      // Format the DateTime object into the desired format (day-month-year)
-      return DateFormat('dd-MM-yyyy').format(date);
-    } catch (e) {
-      // In case of any error, return the original string
-      return dateStr;
     }
   }
 
@@ -79,98 +51,103 @@ class _CoursPageState extends State<CoursPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Online Kurslar",
-          style: TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
+          "Kurslar",
+          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700, color: Colors.white),
         ),
         backgroundColor: Color(0xff0961F5),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator()) // Show loading indicator
-          : courses.isEmpty
-              ? Center(child: Text('No courses available'))
-              : Container(
-                  color: Colors.white,
-                  child: ListView.builder(
-                    itemCount:
-                        courses.length, // Use the length of fetched courses
-                    itemBuilder: (c, i) {
-                      var course = courses[i];
-                      var name = course['name'] ?? 'N/A';
-                      var muddat = course['muddat'] ?? 'N/A';
-                      var formattedMuddat = formatDate(muddat);
-                      return Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                        color: Colors.white,
-                        child: OnlineCours(
-                          name: name,
-                          lengths: formattedMuddat, // Pass the formatted date
-                        ),
-                      );
-                    },
-                  ),
-                ),
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        itemCount: testData.length,
+        itemBuilder: (context, index) {
+          var item = testData[index];
+          return Item(
+            name: item['name'] ?? 'Noma’lum',
+            times: item['muddat'] ?? 'No Date',
+            cours: item['video'], // Ensure this is a List<Map<String, dynamic>> type
+          );
+        },
+      ),
     );
+  }
+
+  String formatDate(String dateStr) {
+    try {
+      DateTime date = DateTime.parse(dateStr);
+      return DateFormat('dd-MM-yyyy').format(date);
+    } catch (e) {
+      print('Sana formatlashda xatolik: $e');
+      return dateStr;
+    }
   }
 }
 
-class OnlineCours extends StatelessWidget {
+class Item extends StatefulWidget {
   final String name;
-  final String lengths;
+  final String times;
+  final List<dynamic> cours; // Change this to List<dynamic> because it's a list of videos
 
-  const OnlineCours({
-    super.key,
-    required this.name,
-    required this.lengths,
-  });
+  const Item(
+      {super.key,
+        required this.name,
+        required this.times,
+        required this.cours,});
+  @override
+  State<Item> createState() => _ItemState();
+}
 
+class _ItemState extends State<Item> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
       child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.black12),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        width: Get.width,
         child: Column(
-          children: <Widget>[
+          children: [
             Image.asset(
               'assets/images/banner/banner_online.png',
               fit: BoxFit.contain,
             ),
             SizedBox(
-              height: 4.0,
+              height: 8.0,
             ),
             Text(
-              name,
+              "${widget.name}",
               style: TextStyle(
                 color: Color(0xff202244),
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
               ),
             ),
             SizedBox(
-              height: 4.0,
+              height: 8.0,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.symmetric(horizontal: 12.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Online kurs muddati: "),
-                  Text(lengths), // Show the formatted course duration
+                  Text("Azolik muddati"),
+                  Text("${widget.times}"), // Sana formatlangan holda
                 ],
               ),
             ),
             SizedBox(
-              height: 4.0,
+              height: 8.0,
             ),
           ],
         ),
       ),
       onPressed: () {
-        Get.to(CoursPages(name: name));
+        print(widget.cours);
+        // Pass the list of courses (widget.cours) to CoursPages.
+        Get.to(() => CoursPages(videolar: widget.cours));
       },
     );
   }

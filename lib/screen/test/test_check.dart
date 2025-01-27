@@ -21,7 +21,7 @@ class TestCheck extends StatelessWidget {
             border: Border.all(color: Colors.black12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black12,
                 blurRadius: 8.0,
                 offset: const Offset(0, 4),
               ),
