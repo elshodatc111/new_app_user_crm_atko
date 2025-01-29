@@ -1,19 +1,18 @@
-import 'package:atko_user_app/screen/cours/video_player.dart';
+import 'package:atko_user_app/screen/cours/play_video.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CoursPages extends StatefulWidget {
   final List<dynamic> videolar;
+  final String name;
 
-  const CoursPages({super.key, required this.videolar});
+  const CoursPages({super.key, required this.videolar, required this.name});
 
   @override
   State<CoursPages> createState() => _CoursPagesState();
 }
 
 class _CoursPagesState extends State<CoursPages> {
-  int currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +25,7 @@ class _CoursPagesState extends State<CoursPages> {
             color: Colors.white,
           ),
         ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Color(0xff0961F5),
       ),
       body: Column(
@@ -33,75 +33,55 @@ class _CoursPagesState extends State<CoursPages> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              widget.videolar[currentIndex]['lessen_name'] ?? "No Name",
+              widget.name ?? "No Name",
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          TextButton(
-            onPressed: () {
-
-            },
-            child: Text(
-              widget.videolar[currentIndex]['video_url'],
-            ),
-          ),
-          SizedBox(height: 16.0),
-
           Expanded(
             child: ListView.builder(
               itemCount: widget.videolar.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Text(
-                    "${index + 1}-dars:",
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
-                  ),
-                  title: Text(
-                    widget.videolar[index]['lessen_name'] ?? " ",
-                    style: TextStyle(fontSize: 20.0),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      currentIndex = index;
-                    });
-                  },
+                return LessinItem(
+                  lessin: widget.videolar[index]['lessen_name'] ?? "",
+                  url: widget.videolar[index]['video_url'] ?? "",
                 );
               },
             ),
           ),
-          // Oldinga va orqaga tugmalari
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Oldinga tugmasi
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  if (currentIndex > 0) {
-                    setState(() {
-                      currentIndex--;
-                    });
-                  }
-                },
-              ),
-              // Orqaga tugmasi
-              IconButton(
-                icon: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  if (currentIndex < widget.videolar.length - 1) {
-                    setState(() {
-                      currentIndex++;
-                    });
-                  }
-                },
-              ),
-            ],
-          ),
         ],
+      ),
+    );
+  }
+}
+
+class LessinItem extends StatelessWidget {
+  final String lessin;
+  final String url;
+
+  const LessinItem({super.key, required this.lessin, required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+        border: Border.all(
+          color: Colors.blueGrey,
+        ),
+      ),
+      child: TextButton(
+        onPressed: () {
+          print(lessin);
+          print(url);
+          Get.to(() => PlayVideo(name: lessin??"",url: url??"https://www.youtube.com/watch?v=6h-92GwZ2cw",),);
+        },
+        child: Text(lessin),
       ),
     );
   }

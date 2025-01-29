@@ -101,6 +101,7 @@ class _TestShowState extends State<TestShow> {
             color: Colors.white,
           ),
         ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xff0961F5),
         actions: [
           Container(

@@ -145,9 +145,7 @@ class _ItemState extends State<Item> {
         ),
       ),
       onPressed: () {
-        print(widget.cours);
-        // Pass the list of courses (widget.cours) to CoursPages.
-        Get.to(() => CoursPages(videolar: widget.cours));
+        Get.to(() => CoursPages(videolar: widget.cours,name: widget.name,));
       },
     );
   }
