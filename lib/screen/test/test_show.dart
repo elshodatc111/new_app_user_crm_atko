@@ -57,7 +57,7 @@ class _TestShowState extends State<TestShow> {
         isLoading = true;
       });
 
-      const String url = 'https://atko.tech/TestAtkoCrm/public/test/check';
+      const String url = 'https://atko.tech/TestAtkoCrm/public/api/test/check';
       final response = await Dio(BaseOptions(
         followRedirects: true,
         validateStatus: (status) => status! < 500,

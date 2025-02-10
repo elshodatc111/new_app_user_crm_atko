@@ -68,7 +68,7 @@ class _TestPageState extends State<TestPage> {
             name: item['name'] ?? 'Noma’lum',
             count: item['count'] ?? 0,
             ball: item['ball'] ?? 0,
-            trues: item['trues'] ?? 0,
+            trues: item['true'] ?? 0,
             test: item,
           );
         },

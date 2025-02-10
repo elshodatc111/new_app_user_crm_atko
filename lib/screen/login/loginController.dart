@@ -53,6 +53,7 @@ class LoginController extends GetxController {
         );
       }
     } catch (e) {
+      print(e);
       Get.snackbar(
         'Xatolik',
         "Tarmoqda xatolik yuz berdi.",

@@ -49,7 +49,7 @@ class HomeController extends GetxController {
     isLoading.value = true;
     try {
       final response = await _dio.get(
-        'https://atko.tech/test_atko_crm/public/api/home',
+        'https://atko.tech/TestAtkoCrm/public/api/home',
         options: Options(
           headers: {
             'Authorization': 'Bearer ${storage.read('token')}',
