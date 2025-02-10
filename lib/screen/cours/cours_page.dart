@@ -26,7 +26,7 @@ class _CoursPageState extends State<CoursPage> {
 
     try {
       var response = await Dio().get(
-        'https://atko.tech/test_atko_crm/public/api/courss',
+        'https://atko.tech/TestAtkoCrm/public/api/courss',
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
         ),

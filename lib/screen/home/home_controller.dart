@@ -22,7 +22,7 @@ class HomeController extends GetxController {
     isLoadingBalans.value = true;
     try {
       final response = await _dio.get(
-        'https://atko.tech/test_atko_crm/public/api/profile',
+        'https://atko.tech/TestAtkoCrm/public/api/profile',
         options: Options(
           headers: {
             'Authorization': 'Bearer ${storage.read('token')}',

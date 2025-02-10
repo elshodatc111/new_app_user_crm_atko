@@ -28,7 +28,7 @@ class LoginController extends GetxController {
 
     try {
       final response = await _dio.post(
-        'https://atko.tech/test_atko_crm/public/api/login',
+        'https://atko.tech/TestAtkoCrm/public/api/login',
         data: {
           'email': email,
           'password': password,

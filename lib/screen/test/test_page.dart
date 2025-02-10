@@ -27,7 +27,7 @@ class _TestPageState extends State<TestPage> {
 
     try {
       var response = await Dio().get(
-        'https://atko.tech/test_atko_crm/public/api/test',
+        'https://atko.tech/TestAtkoCrm/public/api/test',
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
         ),

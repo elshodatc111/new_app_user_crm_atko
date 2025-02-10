@@ -28,7 +28,7 @@ class _PaymartPageState extends State<PaymartPage> {
     });
     try {
       final response = await _dio.get(
-        'https://atko.tech/test_atko_crm/public/api/paymart',
+        'https://atko.tech/TestAtkoCrm/public/api/paymart',
         options: Options(
           headers: {
             'Authorization': 'Bearer ${storage.read('token')}',
